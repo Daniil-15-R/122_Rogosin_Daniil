@@ -19,6 +19,8 @@ namespace _122_Rogosin_Daniil
             timer.IsEnabled = true;
             timer.Tick += (o, t) => { DateTimeNow.Text = DateTime.Now.ToString(); };
             timer.Start();
+
+            MainFrame.Navigate(new Pages.AuthPage());
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -42,7 +44,6 @@ namespace _122_Rogosin_Daniil
             }
         }
 
-        // Методы для смены тем
         private void LightTheme_Click(object sender, RoutedEventArgs e)
         {
             ChangeTheme("Dictionary.xaml");
@@ -62,13 +63,9 @@ namespace _122_Rogosin_Daniil
         {
             try
             {
-                // определяем путь к файлу ресурсов
                 var uri = new Uri(dictionaryName, UriKind.Relative);
-                // загружаем словарь ресурсов
                 ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-                // очищаем коллекцию ресурсов приложения
                 Application.Current.Resources.Clear();
-                // добавляем загруженный словарь ресурсов
                 Application.Current.Resources.MergedDictionaries.Add(resourceDict);
             }
             catch (Exception ex)
