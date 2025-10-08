@@ -25,7 +25,7 @@ namespace _122_Rogosin_Daniil.Pages
         public RegPage()
         {
             InitializeComponent();
-            comboBxRole.SelectedIndex = 0; // Установка роли по умолчанию
+            comboBxRole.SelectedIndex = 0;
         }
 
         public static string GetHash(String password)
@@ -38,7 +38,6 @@ namespace _122_Rogosin_Daniil.Pages
 
         private void regButton_Click(object sender, RoutedEventArgs e)
         {
-            // Проверка заполнения всех полей
             if (string.IsNullOrEmpty(txtbxLog.Text) ||
                 string.IsNullOrEmpty(txtbxFIO.Text) ||
                 string.IsNullOrEmpty(passBxFrst.Password) ||
@@ -48,7 +47,6 @@ namespace _122_Rogosin_Daniil.Pages
                 return;
             }
 
-            // Проверка наличия пользователя с таким логином
             Entities db = new Entities();
             {
                 var user = db.User
@@ -92,14 +90,12 @@ namespace _122_Rogosin_Daniil.Pages
                 return;
             }
 
-            // Проверка совпадения паролей
             if (passBxFrst.Password != passBxScnd.Password)
             {
                 MessageBox.Show("Пароли не совпадают!");
                 return;
             }
 
-            // Регистрация пользователя
             try
             {
                 User userObject = new User

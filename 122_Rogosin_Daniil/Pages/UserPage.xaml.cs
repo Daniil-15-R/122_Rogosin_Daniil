@@ -23,6 +23,68 @@ namespace _122_Rogosin_Daniil.Pages
         public UserPage()
         {
             InitializeComponent();
+            var currentUsers = Entities.GetContext().User.ToList();
+            ListUser.ItemsSource = currentUsers;
+        }
+
+        private void clearFiltersButton_Click_1(object sender, RoutedEventArgs e)
+        {
+            fioFilterTextBox.Text = "";
+            sortComboBox.SelectedIndex = 0;
+            onlyAdminCheckBox.IsChecked = false;
+        }
+
+        private void fioFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateUsers();
+        }
+
+        private void sortComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateUsers();
+        }
+
+        private void onlyAdminCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdateUsers();
+        }
+
+        private void onlyAdminCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UpdateUsers();
+        }
+
+        private void UpdateUsers()
+        {
+            if (!IsInitialized)
+            {
+                return;
+            }
+            try
+            {
+                List<User> currentUsers = Entities.GetContext().User.ToList();
+
+                // Филтрация по фамилии
+                if (!string.IsNullOrWhiteSpace(fioFilterTextBox.Text))
+                {
+                    currentUsers = currentUsers.Where(x => x.FIO.ToLower().Contains(fioFilterTextBox.Text.ToLower())).ToList();
+                }
+
+                // Фильтрация по роли
+                if (onlyAdminCheckBox.IsChecked.Value)
+                {
+                    currentUsers = currentUsers.Where(x => x.Role == "Admin").ToList();
+                }
+
+                // Сортировка по убыванию/возрастанию
+                ListUser.ItemsSource = (sortComboBox.SelectedIndex == 0) ?
+                    currentUsers.OrderBy(x => x.FIO).ToList() :
+                    currentUsers.OrderByDescending(x => x.FIO).ToList();
+            }
+            catch (Exception)
+            {
+                // Обработка ошибок
+            }
         }
     }
 }

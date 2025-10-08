@@ -9,6 +9,21 @@
       Title="AdminPage">
 
     <Grid>
-        
+        <Button x:Name="BtnTab1" Content="Таблица пользователей"
+                HorizontalAlignment="Left" Margin="68,160,0,0" VerticalAlignment="Top"
+                RenderTransformOrigin="-1.326,0.371" Height="41" Width="181"
+                Click="BtnTab1_Click"/>
+        <Button x:Name="BtnTab2" Content="Таблица категорий"
+                HorizontalAlignment="Center" Margin="0,160,0,0" VerticalAlignment="Top"
+                RenderTransformOrigin="-1.326,0.371" Height="41" Width="173"
+                Click="BtnTab2_Click"/>
+        <Button x:Name="BtnTab3" Content="Таблица платежей"
+                HorizontalAlignment="Left" Margin="531,160,0,0" VerticalAlignment="Top"
+                RenderTransformOrigin="-1.326,0.371" Height="41" Width="163"
+                Click="BtnTab3_Click"/>
+        <Button x:Name="BtnTab4" Content="Диаграммы"
+        HorizontalAlignment="Center" Margin="0,321,0,0" VerticalAlignment="Top"
+        RenderTransformOrigin="-1.326,0.371" Height="41" Width="131"
+        Click="BtnTab4_Click"/>
     </Grid>
 </Page>

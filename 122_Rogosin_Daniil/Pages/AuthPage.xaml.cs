@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace _122_Rogosin_Daniil.Pages
 {
@@ -23,24 +15,28 @@ namespace _122_Rogosin_Daniil.Pages
     {
         private int failedAttempts = 0;
         private User currentUser;
+
         public AuthPage()
         {
             InitializeComponent();
+            // Явно скрываем капчу при запуске
+            captcha.Visibility = Visibility.Hidden;
+            captchaInput.Visibility = Visibility.Hidden;
+            labelCaptcha.Visibility = Visibility.Hidden;
+            submitCaptcha.Visibility = Visibility.Hidden;
         }
 
         public static string GetHash(String password)
         {
             using (var hash = SHA1.Create())
             {
-                return
-                string.Concat(hash.ComputeHash(Encoding.UTF8.GetBytes(password)).Select(x => x.ToString("X2")));
+                return string.Concat(hash.ComputeHash(Encoding.UTF8.GetBytes(password)).Select(x => x.ToString("X2")));
             }
         }
+
         private void ButtonEnter_OnClick(object sender, RoutedEventArgs e)
         {
-
-            if (string.IsNullOrEmpty(TextBoxLogin.Text) ||
-            string.IsNullOrEmpty(PasswordBox.Password))
+            if (string.IsNullOrEmpty(TextBoxLogin.Text) || string.IsNullOrEmpty(PasswordBox.Password))
             {
                 MessageBox.Show("Введите логин или пароль");
                 return;
@@ -51,24 +47,28 @@ namespace _122_Rogosin_Daniil.Pages
             using (var db = new Entities())
             {
                 var user = db.User
-                .AsNoTracking()
-                .FirstOrDefault(u => u.Login == TextBoxLogin.Text && u.Password == hashedPassword);
+                    .AsNoTracking()
+                    .FirstOrDefault(u => u.Login == TextBoxLogin.Text && u.Password == hashedPassword);
 
                 if (user == null)
                 {
                     MessageBox.Show("Пользователь с такими данными не найден!");
                     failedAttempts++;
+
+                    // АКТИВАЦИЯ КАПЧИ ПОСЛЕ 3 НЕУДАЧНЫХ ПОПЫТОК
                     if (failedAttempts >= 3)
                     {
-                        MessageBox.Show("Превышено количество попыток входа. Обратитесь к администратору.");
-                        // Заблокировать кнопку входа после 3 неудачных попыток
-                        ButtonEnter.IsEnabled = false;
+                        MessageBox.Show("Превышено количество попыток входа. Требуется ввод капчи.");
+                        CaptchaChange();
+                        CaptchaSwitch();
+                        return;
                     }
                     return;
                 }
                 else
                 {
                     MessageBox.Show("Пользователь успешно найден!");
+                    failedAttempts = 0; // Сбрасываем счетчик при успешном входе
 
                     switch (user.Role)
                     {
@@ -116,6 +116,7 @@ namespace _122_Rogosin_Daniil.Pages
         {
             // Логика при изменении пароля (можно добавить при необходимости)
         }
+
         public void CaptchaSwitch()
         {
             switch (captcha.Visibility)
@@ -123,6 +124,7 @@ namespace _122_Rogosin_Daniil.Pages
                 case Visibility.Visible:
                     TextBoxLogin.Clear();
                     PasswordBox.Clear();
+                    captchaInput.Clear();
 
                     captcha.Visibility = Visibility.Hidden;
                     captchaInput.Visibility = Visibility.Hidden;
@@ -138,7 +140,8 @@ namespace _122_Rogosin_Daniil.Pages
                     ButtonEnter.Visibility = Visibility.Visible;
                     ButtonReg.Visibility = Visibility.Visible;
                     ButtonEnter.IsEnabled = true;
-                    return;
+                    break;
+
                 case Visibility.Hidden:
                     captcha.Visibility = Visibility.Visible;
                     captchaInput.Visibility = Visibility.Visible;
@@ -153,15 +156,14 @@ namespace _122_Rogosin_Daniil.Pages
                     ButtonChangePassword.Visibility = Visibility.Hidden;
                     ButtonEnter.Visibility = Visibility.Hidden;
                     ButtonReg.Visibility = Visibility.Hidden;
-                    return;
+                    break;
             }
         }
 
         // Код обновления капчи
         public void CaptchaChange()
         {
-            String allowchar = " ";
-            allowchar = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
+            String allowchar = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
             allowchar += "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,y,z";
             allowchar += "1,2,3,4,5,6,7,8,9,0";
             char[] a = { ',' };
@@ -185,6 +187,7 @@ namespace _122_Rogosin_Daniil.Pages
             {
                 MessageBox.Show("Неверно введена капча", "Ошибка");
                 CaptchaChange();
+                captchaInput.Clear();
             }
             else
             {
