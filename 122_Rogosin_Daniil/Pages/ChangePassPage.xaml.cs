@@ -25,10 +25,8 @@ namespace _122_Rogosin_Daniil.Pages
         {
             InitializeComponent();
         }
-
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            // Проверка заполнения всех полей
             if (string.IsNullOrEmpty(CurrentPasswordBox.Password) ||
                 string.IsNullOrEmpty(NewPasswordBox.Password) ||
                 string.IsNullOrEmpty(ConfirmPasswordBox.Password) ||
@@ -38,10 +36,11 @@ namespace _122_Rogosin_Daniil.Pages
                 return;
             }
 
-            // Проверка правильности введенных данных аккаунта
+            string login = TbLogin.Text.Trim();
             string hashedPass = GetHash(CurrentPasswordBox.Password);
+
             var user = Entities.GetContext().User
-                .FirstOrDefault(u => u.Login == TbLogin.Text && u.Password == hashedPass);
+                .FirstOrDefault(u => u.Login == login && u.Password == hashedPass);
 
             if (user == null)
             {
@@ -49,46 +48,59 @@ namespace _122_Rogosin_Daniil.Pages
                 return;
             }
 
-            // Проверка совпадения нового пароля и подтверждения
             if (NewPasswordBox.Password != ConfirmPasswordBox.Password)
             {
                 MessageBox.Show("Новый пароль и подтверждение не совпадают!");
                 return;
             }
 
-            // Проверка корректности нового пароля (аналогично регистрации)
-            bool en = true;
-            bool number = false;
+            bool hasUpper = false;
+            bool hasLower = false;
+            bool hasDigit = false;
 
             foreach (char c in NewPasswordBox.Password)
             {
-                if (c >= 'a' && c <= 'z') en = false;
-                if (c >= '0' && c <= '9') number = true;
+                if (char.IsUpper(c)) hasUpper = true;
+                if (char.IsLower(c)) hasLower = true;
+                if (char.IsDigit(c)) hasDigit = true;
             }
 
-            if (!number || en || NewPasswordBox.Password.Length < 6)
+            if (NewPasswordBox.Password.Length < 6)
             {
-                MessageBox.Show("Пароль должен содержать минимум 6 символов, включая цифры и заглавные буквы!");
+                MessageBox.Show("Пароль должен содержать минимум 6 символов!");
                 return;
             }
 
-            // Сохранение нового пароля
-            if (en && number)
+            if (!hasDigit)
+            {
+                MessageBox.Show("Пароль должен содержать цифры!");
+                return;
+            }
+
+            if (!hasUpper)
+            {
+                MessageBox.Show("Пароль должен содержать заглавные буквы!");
+                return;
+            }
+
+            try
             {
                 user.Password = GetHash(NewPasswordBox.Password);
                 Entities.GetContext().SaveChanges();
                 MessageBox.Show("Пароль успешно изменен!");
                 NavigationService?.Navigate(new AuthPage());
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при сохранении: {ex.Message}");
+            }
         }
-
-        // Метод для хеширования пароля
         private string GetHash(string password)
         {
-            using (var sha256 = SHA256.Create())
+            using (var hash = SHA1.Create())
             {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                return string.Concat(hash.ComputeHash(Encoding.UTF8.GetBytes(password))
+                    .Select(x => x.ToString("X2")));
             }
         }
     }

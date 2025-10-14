@@ -13,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms.DataVisualization.Charting;
+using Word = Microsoft.Office.Interop.Word;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace _122_Rogosin_Daniil.Pages
 {
@@ -26,8 +29,51 @@ namespace _122_Rogosin_Daniil.Pages
         public DiagrammPage()
         {
             InitializeComponent();
-
+            InitializeChart();
             LoadComboBoxData();
+        }
+
+        private void InitializeChart()
+        {
+            try
+            {
+                ChartPayments.Series.Clear();
+                ChartPayments.ChartAreas.Clear();
+                ChartPayments.Legends.Clear();
+
+                var chartArea = new ChartArea("MainChartArea")
+                {
+                    AxisX = { Title = "Категории платежей" },
+                    AxisY = { Title = "Сумма" }
+                };
+                ChartPayments.ChartAreas.Add(chartArea);
+
+                var legend = new Legend
+                {
+                    Name = "MainLegend",
+                    Docking = Docking.Top,
+                    IsDockedInsideChartArea = false,
+                    Title = "Категории платежей"
+                };
+                ChartPayments.Legends.Add(legend);
+
+                var series = new Series("Платежи")
+                {
+                    ChartType = SeriesChartType.Column,
+                    IsValueShownAsLabel = true,
+                    LabelFormat = "N2",
+                    XValueType = ChartValueType.String,
+                    YValueType = ChartValueType.Double
+                };
+                ChartPayments.Series.Add(series);
+
+                // Установка начального типа диаграммы
+                CmbDiagram.SelectedItem = SeriesChartType.Column;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка инициализации диаграммы: {ex.Message}");
+            }
         }
 
         private void LoadComboBoxData()
@@ -35,13 +81,7 @@ namespace _122_Rogosin_Daniil.Pages
             try
             {
                 CmbUser.ItemsSource = _context.User.ToList();
-
-                var chartTypes = new List<string>
-                {
-                    "Столбчатая",
-                    "Линейная",
-                    "Круговая"
-                };
+                var chartTypes = Enum.GetValues(typeof(SeriesChartType)).Cast<SeriesChartType>().ToList();
                 CmbDiagram.ItemsSource = chartTypes;
 
                 if (CmbUser.Items.Count > 0)
@@ -59,11 +99,53 @@ namespace _122_Rogosin_Daniil.Pages
         {
             try
             {
-                if (CmbUser.SelectedItem is User currentUser &&
-                    CmbDiagram.SelectedItem is string currentType)
+                if (CmbUser.SelectedItem is User selectedUser)
                 {
-                    MessageBox.Show($"Выбран пользователь: {currentUser.FIO}\nТип диаграммы: {currentType}",
-                                  "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                    var series = ChartPayments.Series["Платежи"];
+                    if (CmbDiagram.SelectedItem is SeriesChartType chartType)
+                    {
+                        series.ChartType = chartType;
+                    }
+                    series.Points.Clear();
+
+                    var payments = _context.Payment
+                        .Where(p => p.User.ID == selectedUser.ID)
+                        .ToList();
+
+                    if (!payments.Any())
+                    {
+                        ChartPayments.Titles.Clear();
+                        ChartPayments.Titles.Add($"Платежи пользователя: {selectedUser.FIO} - Нет данных");
+                        return;
+                    }
+
+                    // Группируем платежи по категориям и суммируем
+                    var categories = _context.Category.ToList();
+                    foreach (var category in categories)
+                    {
+                        decimal sum = payments
+                            .Where(p => p.Category.ID == category.ID)
+                            .Sum(p => p.Price * p.Num);
+
+                        if (sum > 0)
+                        {
+                            AddDataPoint(series, category.Name, sum);
+                        }
+                    }
+
+                    // Настройки для круговой диаграммы
+                    if (series.ChartType == SeriesChartType.Pie)
+                    {
+                        series["PieLabelStyle"] = "Outside";
+                        series["PieLineColor"] = "Black";
+                    }
+                    else
+                    {
+                        series.IsValueShownAsLabel = true;
+                    }
+
+                    ChartPayments.Titles.Clear();
+                    ChartPayments.Titles.Add($"Платежи пользователя: {selectedUser.FIO}");
                 }
             }
             catch (Exception ex)
@@ -72,47 +154,52 @@ namespace _122_Rogosin_Daniil.Pages
             }
         }
 
+        private void AddDataPoint(Series series, string category, decimal value)
+        {
+            var point = new DataPoint
+            {
+                AxisLabel = category,
+                YValues = new[] { (double)value },
+                Label = value.ToString("N2"),
+                LegendText = category
+            };
+            series.Points.Add(point);
+        }
+
+        // Методы экспорта остаются без изменений
         private void BtnExportExcel_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Получаем список пользователей с сортировкой по ФИО
                 var allUsers = _context.User.ToList().OrderBy(u => u.FIO).ToList();
 
-                // Создаем новую книгу Excel
                 var application = new Microsoft.Office.Interop.Excel.Application();
                 application.SheetsInNewWorkbook = allUsers.Count();
                 Microsoft.Office.Interop.Excel.Workbook workbook = application.Workbooks.Add(Type.Missing);
 
-                decimal grandTotal = 0m; // Общий итог по всем пользователям
+                decimal grandTotal = 0m;
 
-                // Запускаем цикл по пользователям
                 for (int i = 0; i < allUsers.Count(); i++)
                 {
                     int startRowIndex = 1;
                     Microsoft.Office.Interop.Excel.Worksheet worksheet = application.Worksheets.Item[i + 1];
                     worksheet.Name = allUsers[i].FIO;
 
-                    // Добавляем названия колонок
                     worksheet.Cells[1, 1] = "Дата платежа";
                     worksheet.Cells[1, 2] = "Название";
                     worksheet.Cells[1, 3] = "Стоимость";
                     worksheet.Cells[1, 4] = "Количество";
                     worksheet.Cells[1, 5] = "Сумма";
 
-                    // Форматируем заголовки колонок
                     Microsoft.Office.Interop.Excel.Range columnHeaderRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[1, 5]];
                     columnHeaderRange.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
                     columnHeaderRange.Font.Bold = true;
                     startRowIndex++;
 
-                    // Группируем платежи текущего пользователя по категориям
                     var userCategories = allUsers[i].Payment.OrderBy(u => u.Date).GroupBy(u => u.Category).OrderBy(u => u.Key.Name);
 
-                    // Вложенный цикл по категориям платежей
                     foreach (var groupCategory in userCategories)
                     {
-                        // Настройка отображения названий категорий
                         Microsoft.Office.Interop.Excel.Range headerRange = worksheet.Range[worksheet.Cells[startRowIndex, 1], worksheet.Cells[startRowIndex, 5]];
                         headerRange.Merge();
                         headerRange.Value = groupCategory.Key.Name;
@@ -120,7 +207,6 @@ namespace _122_Rogosin_Daniil.Pages
                         headerRange.Font.Italic = true;
                         startRowIndex++;
 
-                        // Вложенный цикл по платежам
                         foreach (var payment in groupCategory)
                         {
                             worksheet.Cells[startRowIndex, 1] = payment.Date.ToString("dd.MM.yyyy");
@@ -133,25 +219,21 @@ namespace _122_Rogosin_Daniil.Pages
                             startRowIndex++;
                         }
 
-                        // Добавляем ИТОГО для категории
                         Microsoft.Office.Interop.Excel.Range sumRange = worksheet.Range[worksheet.Cells[startRowIndex, 1], worksheet.Cells[startRowIndex, 4]];
                         sumRange.Merge();
                         sumRange.Value = "ИТОГО:";
                         sumRange.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignRight;
 
-                        // Рассчитываем величину общих затрат для категории
                         worksheet.Cells[startRowIndex, 5].Formula = $"=SUM(E{startRowIndex - groupCategory.Count()}:E{startRowIndex - 1})";
                         sumRange.Font.Bold = true;
                         (worksheet.Cells[startRowIndex, 5] as Microsoft.Office.Interop.Excel.Range).Font.Bold = true;
 
-                        // Добавляем к общему итогу
                         var categoryTotalRange = worksheet.Cells[startRowIndex, 5] as Microsoft.Office.Interop.Excel.Range;
                         grandTotal += decimal.Parse(categoryTotalRange.Value?.ToString() ?? "0");
 
                         startRowIndex++;
                     }
 
-                    // Добавляем границы таблицы платежей
                     if (startRowIndex > 1)
                     {
                         Microsoft.Office.Interop.Excel.Range rangeBorders = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[startRowIndex - 1, 5]];
@@ -164,34 +246,26 @@ namespace _122_Rogosin_Daniil.Pages
                         Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
                     }
 
-                    // Устанавливаем автоширину всех столбцов листа
                     worksheet.Columns.AutoFit();
                 }
 
-                // Добавляем лист "Общий итог"
                 Microsoft.Office.Interop.Excel.Worksheet summarySheet = workbook.Worksheets.Add(
                     After: workbook.Worksheets[workbook.Worksheets.Count]);
                 summarySheet.Name = "Общий итог";
 
-                // Запись заголовка и значения
                 summarySheet.Cells[1, 1] = "Общий итог:";
                 summarySheet.Cells[1, 2] = grandTotal;
 
-                // Форматирование: красный цвет и жирный шрифт
                 Microsoft.Office.Interop.Excel.Range summaryRange = summarySheet.Range[summarySheet.Cells[1, 1], summarySheet.Cells[1, 2]];
                 summaryRange.Font.Color = Microsoft.Office.Interop.Excel.XlRgbColor.rgbRed;
                 summaryRange.Font.Bold = true;
 
-                // Форматирование ячейки с суммой
                 (summarySheet.Cells[1, 2] as Microsoft.Office.Interop.Excel.Range).NumberFormat = "0.00";
 
-                // Автоподбор ширины столбцов
                 summarySheet.Columns.AutoFit();
 
-                // Разрешаем отображение таблицы
                 application.Visible = true;
 
-                // Сохраняем документ
                 string basePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 string excelPath = System.IO.Path.Combine(basePath, "Payments.xlsx");
 
@@ -289,8 +363,8 @@ namespace _122_Rogosin_Daniil.Pages
 
                         cellRange = paymentsTable.Cell(i + 2, 2).Range;
                         decimal sum = user.Payment.ToList()
-                            .Where(u => u.Category == currentCategory)
-                            .Sum(u => u.Num * u.Price);
+                            .Where(u => u.Category.ID == currentCategory.ID)
+                            .Sum(u => u.Price * u.Num);
                         cellRange.Text = sum.ToString("N2") + " руб.";
                         cellRange.Font.Name = "Times New Roman";
                         cellRange.Font.Size = 12;
@@ -361,43 +435,6 @@ namespace _122_Rogosin_Daniil.Pages
                 MessageBox.Show($"Ошибка при экспорте в Word: {ex.Message}", "Ошибка",
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private decimal GetUserPaymentsSum(User user, Category category)
-        {
-            try
-            {
-                var sum = _context.Payment
-                    .Where(p => p.User == user && p.Category == category)
-                    .Sum(p => p.Price * p.Num);
-
-                return sum;
-            }
-            catch
-            {
-                return 0m;
-            }
-        }
-
-        private List<PaymentData> GetUserPaymentData(User user)
-        {
-            var result = new List<PaymentData>();
-            var categories = _context.Category.ToList();
-
-            foreach (var category in categories)
-            {
-                decimal sum = GetUserPaymentsSum(user, category);
-                if (sum > 0)
-                {
-                    result.Add(new PaymentData
-                    {
-                        CategoryName = category.Name,
-                        Amount = sum
-                    });
-                }
-            }
-
-            return result;
         }
     }
 

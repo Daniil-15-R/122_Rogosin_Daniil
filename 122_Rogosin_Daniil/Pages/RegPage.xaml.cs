@@ -60,7 +60,6 @@ namespace _122_Rogosin_Daniil.Pages
                 }
             }
 
-            // Проверка формата пароля
             if (passBxFrst.Password.Length < 6)
             {
                 MessageBox.Show("Пароль слишком короткий, должно быть минимум 6 символов!");
@@ -111,14 +110,12 @@ namespace _122_Rogosin_Daniil.Pages
 
                 MessageBox.Show("Пользователь успешно зарегистрирован!");
 
-                // Очистка полей после успешной регистрации
                 txtbxLog.Clear();
                 passBxFrst.Clear();
                 passBxScnd.Clear();
                 comboBxRole.SelectedIndex = 0;
                 txtbxFIO.Clear();
 
-                // Показ подсказок после очистки
                 lblLogHitn.Visibility = Visibility.Visible;
                 lblPassHitn.Visibility = Visibility.Visible;
                 lblPassSecHitn.Visibility = Visibility.Visible;
@@ -130,7 +127,6 @@ namespace _122_Rogosin_Daniil.Pages
             }
         }
 
-        // Обработчики событий для скрытия/показа подсказок
         private void txtbxLog_TextChanged(object sender, TextChangedEventArgs e)
         {
             lblLogHitn.Visibility = Visibility.Visible;
@@ -167,7 +163,6 @@ namespace _122_Rogosin_Daniil.Pages
             }
         }
 
-        // Обработчики событий для фокусировки на полях при клике на подсказки
         private void lblLogHitn_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             txtbxLog.Focus();

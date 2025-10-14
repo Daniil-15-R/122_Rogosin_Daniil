@@ -4,6 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:_122_Rogosin_Daniil.Pages"
+      xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+      xmlns:chart="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DiagrammPage">
@@ -14,7 +16,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Верхняя панель с элементами управления -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" HorizontalAlignment="Center">
             <TextBlock Text="Пользователь:" VerticalAlignment="Center" Margin="5,0"/>
             <ComboBox x:Name="CmbUser" DisplayMemberPath="FIO" Width="200" Margin="5,0" 
@@ -29,5 +30,15 @@
             <Button x:Name="BtnExportWord" Content="Экспорт в Word" Width="120" Margin="5,0"
                     Click="BtnExportWord_Click"/>
         </StackPanel>
+
+
+        <wfi:WindowsFormsHost Grid.Row="1">
+            <chart:Chart x:Name="ChartPayments" Dock="Fill">
+                <chart:Chart.Legends>
+                    <chart:Legend>
+                    </chart:Legend>
+                </chart:Chart.Legends>
+            </chart:Chart>
+        </wfi:WindowsFormsHost>
     </Grid>
 </Page>

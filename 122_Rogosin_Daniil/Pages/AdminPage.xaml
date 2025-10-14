@@ -9,21 +9,46 @@
       Title="AdminPage">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Первый ряд кнопок -->
         <Button x:Name="BtnTab1" Content="Таблица пользователей"
-                HorizontalAlignment="Left" Margin="68,160,0,0" VerticalAlignment="Top"
-                RenderTransformOrigin="-1.326,0.371" Height="41" Width="181"
+                Grid.Row="1" Grid.Column="1"
+                Height="41" Width="181"
+                Margin="10,0"
                 Click="BtnTab1_Click"/>
+
         <Button x:Name="BtnTab2" Content="Таблица категорий"
-                HorizontalAlignment="Center" Margin="0,160,0,0" VerticalAlignment="Top"
-                RenderTransformOrigin="-1.326,0.371" Height="41" Width="173"
+                Grid.Row="1" Grid.Column="2"
+                Height="41" Width="173"
+                Margin="10,0"
                 Click="BtnTab2_Click"/>
+
         <Button x:Name="BtnTab3" Content="Таблица платежей"
-                HorizontalAlignment="Left" Margin="531,160,0,0" VerticalAlignment="Top"
-                RenderTransformOrigin="-1.326,0.371" Height="41" Width="163"
+                Grid.Row="1" Grid.Column="3"
+                Height="41" Width="163"
+                Margin="10,0"
                 Click="BtnTab3_Click"/>
+
+        <!-- Кнопка диаграмм -->
         <Button x:Name="BtnTab4" Content="Диаграммы"
-        HorizontalAlignment="Center" Margin="0,321,0,0" VerticalAlignment="Top"
-        RenderTransformOrigin="-1.326,0.371" Height="41" Width="131"
-        Click="BtnTab4_Click"/>
+                Grid.Row="3" Grid.Column="2"
+                Height="41" Width="131"
+                Margin="10,20"
+                Click="BtnTab4_Click"/>
     </Grid>
 </Page>
