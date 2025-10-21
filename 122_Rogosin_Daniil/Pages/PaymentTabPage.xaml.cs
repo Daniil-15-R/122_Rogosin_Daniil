@@ -26,7 +26,14 @@ namespace _122_Rogosin_Daniil.Pages
             DataGridPayment.ItemsSource = Entities.GetContext().Payment.ToList();
             this.IsVisibleChanged += Page_IsVisibleChanged;
         }
-
+        /// <summary>
+        /// Обрабатывает изменение видимости страницы для обновления данных
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события изменения видимости</param>
+        /// <remarks>
+        /// При повторном отображении страницы обновляет данные в DataGrid
+        /// </remarks>
         private void Page_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (Visibility == Visibility.Visible)
@@ -40,7 +47,15 @@ namespace _122_Rogosin_Daniil.Pages
         {
             NavigationService?.Navigate(new AddPaymentPage(null));
         }
-
+        /// <summary>
+        /// Обрабатывает нажатие кнопки удаления выбранных платежей
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
+        /// <remarks>
+        /// Выполняет подтверждение удаления и удаляет выбранные платежи из базы данных
+        /// </remarks>
+        /// <exception cref="Exception">Может вызвать исключение при ошибке удаления из БД</exception>
         private void ButtonDel_Click(object sender, RoutedEventArgs e)
         {
             var paymentForRemoving = DataGridPayment.SelectedItems.Cast<Payment>().ToList();

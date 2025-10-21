@@ -19,13 +19,21 @@ namespace _122_Rogosin_Daniil.Pages
         public AuthPage()
         {
             InitializeComponent();
-            // Явно скрываем капчу при запуске
             captcha.Visibility = Visibility.Hidden;
             captchaInput.Visibility = Visibility.Hidden;
             labelCaptcha.Visibility = Visibility.Hidden;
             submitCaptcha.Visibility = Visibility.Hidden;
         }
-
+        /// <summary>
+        /// Генерирует SHA1 хэш для пароля
+        /// </summary>
+        /// <param name="password">Пароль для хэширования</param>
+        /// <returns>Хэшированная строка пароля</returns>
+        /// <example>
+        /// <code>
+        /// string hashed = GetHash("password123");
+        /// </code>
+        /// </example>
         public static string GetHash(String password)
         {
             using (var hash = SHA1.Create())
@@ -54,8 +62,6 @@ namespace _122_Rogosin_Daniil.Pages
                 {
                     MessageBox.Show("Пользователь с такими данными не найден!");
                     failedAttempts++;
-
-                    // АКТИВАЦИЯ КАПЧИ ПОСЛЕ 3 НЕУДАЧНЫХ ПОПЫТОК
                     if (failedAttempts >= 3)
                     {
                         MessageBox.Show("Превышено количество попыток входа. Требуется ввод капчи.");
@@ -90,7 +96,11 @@ namespace _122_Rogosin_Daniil.Pages
         {
             NavigationService?.Navigate(new RegPage());
         }
-
+        // <summary>
+        /// Обработчик перехода на страницу смены пароля
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
         private void ButtonChangePassword_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new ChangePassPage());
@@ -104,17 +114,6 @@ namespace _122_Rogosin_Daniil.Pages
         private void txtHintPass_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             PasswordBox.Focus();
-        }
-
-        // Добавленные методы для обработки событий (пустые, но убирают ошибки компиляции)
-        private void TextBoxLogin_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            // Логика при изменении текста логина (можно добавить при необходимости)
-        }
-
-        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            // Логика при изменении пароля (можно добавить при необходимости)
         }
 
         public void CaptchaSwitch()

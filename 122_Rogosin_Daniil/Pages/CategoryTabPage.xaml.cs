@@ -27,7 +27,14 @@ namespace _122_Rogosin_Daniil.Pages
             DataGridCategory.ItemsSource = Entities.GetContext().Category.ToList();
             this.IsVisibleChanged += Page_IsVisibleChanged;
         }
-
+        /// <summary>
+        /// Обрабатывает изменение видимости страницы для обновления данных
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события изменения видимости</param>
+        /// <remarks>
+        /// При повторном отображении страницы обновляет данные в DataGrid
+        /// </remarks>
         private void Page_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (Visibility == Visibility.Visible)
@@ -36,7 +43,15 @@ namespace _122_Rogosin_Daniil.Pages
                 DataGridCategory.ItemsSource = Entities.GetContext().Category.ToList();
             }
         }
-
+        /// <summary>
+        /// Обрабатывает нажатие кнопки удаления выбранных категорий
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
+        /// <remarks>
+        /// Выполняет подтверждение удаления и удаляет выбранные категории из базы данных
+        /// </remarks>
+        /// <exception cref="Exception">Может вызвать исключение при ошибке удаления из БД</exception>
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new AddCategoryPage(null));

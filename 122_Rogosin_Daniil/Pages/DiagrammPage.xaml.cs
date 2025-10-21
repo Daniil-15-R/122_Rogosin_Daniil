@@ -94,7 +94,11 @@ namespace _122_Rogosin_Daniil.Pages
                 MessageBox.Show($"Ошибка загрузки данных: {ex.Message}");
             }
         }
-
+        /// <summary>
+        /// Обновляет диаграмму при изменении выбора пользователя или типа диаграммы
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события выбора</param>
         private void UpdateChart(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -280,7 +284,11 @@ namespace _122_Rogosin_Daniil.Pages
                               MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
+        /// <summary>
+        /// Экспортирует данные о платежах в Excel файл
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
         private void BtnExportWord_Click(object sender, RoutedEventArgs e)
         {
             try

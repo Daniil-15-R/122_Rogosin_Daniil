@@ -25,6 +25,23 @@ namespace _122_Rogosin_Daniil.Pages
         {
             InitializeComponent();
         }
+        /// <summary>
+        /// Обрабатывает событие нажатия кнопки сохранения нового пароля
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
+        /// <remarks>
+        /// Выполняет проверку текущего пароля, валидацию нового пароля и сохраняет изменения
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// // Пример использования:
+        /// // 1. Введите логин и текущий пароль
+        /// // 2. Введите новый пароль, соответствующий требованиям безопасности
+        /// // 3. Подтвердите новый пароль
+        /// // 4. Нажмите кнопку "Сохранить"
+        /// </code>
+        /// </example>
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(CurrentPasswordBox.Password) ||
@@ -95,6 +112,11 @@ namespace _122_Rogosin_Daniil.Pages
                 MessageBox.Show($"Ошибка при сохранении: {ex.Message}");
             }
         }
+        /// <summary>
+        /// Вычисляет хеш-сумму пароля с использованием алгоритма SHA1
+        /// </summary>
+        /// <param name="password">Пароль для хеширования</param>
+        /// <returns>Хеш-сумма пароля в шестнадцатеричном формате</returns>
         private string GetHash(string password)
         {
             using (var hash = SHA1.Create())

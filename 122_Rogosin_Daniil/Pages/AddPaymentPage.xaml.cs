@@ -21,7 +21,10 @@ namespace _122_Rogosin_Daniil.Pages
     public partial class AddPaymentPage : Page
     {
         private Payment _currentPayment = new Payment();
-
+        /// <summary>
+        /// Инициализирует новый экземпляр страницы добавления/редактирования платежа
+        /// </summary>
+        /// <param name="selectedPayment">Платеж для редактирования. Если null, создается новый платеж</param>
         public AddPaymentPage(Payment selectedPayment)
         {
             InitializeComponent();
@@ -35,7 +38,15 @@ namespace _122_Rogosin_Daniil.Pages
                 _currentPayment = selectedPayment;
             DataContext = _currentPayment;
         }
-
+        /// <summary>
+        /// Обрабатывает событие нажатия кнопки сохранения платежа
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
+        /// <remarks>
+        /// Выполняет валидацию всех обязательных полей и сохраняет платеж в базу данных
+        /// </remarks>
+        /// <exception cref="Exception">Может вызвать исключение при ошибке сохранения в БД</exception>
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder errors = new StringBuilder();

@@ -17,11 +17,14 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="150" />
         </Grid.ColumnDefinitions>
+
         <TextBlock Text="Логин"
                    Grid.Row="0"
                    Grid.Column="0"
@@ -42,57 +45,86 @@
                    Grid.Column="0"
                    Margin="10,0,0,0"
                    FontSize="20" />
-        <TextBlock Text="Фото (необязательно)"
+        <TextBlock Text="Фото"
                    Grid.Row="4"
                    Grid.Column="0"
                    Margin="10,0,0,0"
                    FontSize="20" />
+
         <TextBox x:Name="TBLogin"
                  Text="{Binding Login}"
                  Grid.Row="0"
                  ToolTip="Введите логин"
                  Grid.Column="1"
-                 Margin="156,5,71,5" />
+                 Margin="10,5,10,5" />
         <TextBox x:Name="TBPass"
                  Text="{Binding Password}"
                  Grid.Column="1"
                  ToolTip="Введите пароль"
-                 Margin="156,5,71,5"
+                 Margin="10,5,10,5"
                  Grid.Row="1" />
         <ComboBox Name="cmbRole"
-                  SelectedItem="{Binding Role}"
-                  ToolTip="Выберите роль"
-                  Grid.Row="2"
-                  Grid.Column="1"
-                  Margin="156,5,71,5">
-            <ComboBoxItem Content="Admin" />
+          SelectedItem="{Binding Role}"
+          ToolTip="Выберите роль"
+          Grid.Row="2"
+          Grid.Column="1"
+          Margin="10,5,10,5"
+          SelectedIndex="0">
             <ComboBoxItem Content="User" />
+            <ComboBoxItem Content="Admin" />
         </ComboBox>
         <TextBox x:Name="TBFio"
                  Text="{Binding FIO}"
                  Grid.Row="3"
                  ToolTip="Введите ФИО"
                  Grid.Column="1"
-                 Margin="156,5,71,5" />
-        <TextBox x:Name="TBPhoto"
-                 Text="{Binding Photo}"
-                 Grid.Row="4"
-                 ToolTip="Добавьте фото"
-                 Grid.Column="1"
-                 Margin="156,5,71,4" />
-        <Button x:Name="ButtonSave"
-                Content="Сохранить"
-                Grid.Row="5"
-                Click="ButtonSave_Click"
-                Grid.ColumnSpan="2"
-                Margin="0,0,50,0"
-                HorizontalAlignment="Right" />
-        <Button x:Name="ButtonClean"
-                Content="Очистить"
-                Grid.Row="5"
-                Click="ButtonClean_Click"
-                Grid.ColumnSpan="2"
-                Margin="50,0,0,0"
-                HorizontalAlignment="Left" />
+                 Margin="10,5,10,5" />
+
+        <!-- Область для работы с фото -->
+        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="10,5,10,5">
+            <TextBox x:Name="TBPhoto"
+                     Text="{Binding Photo}"
+                     IsReadOnly="True"
+                     ToolTip="Выбранный файл фотографии"
+                     Width="200"
+                     Margin="0,0,10,0" />
+            <Button x:Name="ButtonSelectPhoto"
+                    Content="Выбрать"
+                    Click="ButtonSelectPhoto_Click"
+                    Width="80"
+                    Margin="0,0,5,0" />
+            <Button x:Name="ButtonRemovePhoto"
+                    Content="Удалить"
+                    Click="ButtonRemovePhoto_Click"
+                    Width="80" />
+        </StackPanel>
+
+        <!-- Превью изображения -->
+        <Border Grid.Row="4" Grid.Column="2" 
+                Grid.RowSpan="2"
+                BorderBrush="Gray" 
+                BorderThickness="1"
+                Margin="10,5,10,5"
+                Background="LightGray">
+            <Image x:Name="ImagePreview" 
+                   Stretch="Uniform"
+                   ToolTip="Превью фотографии" />
+        </Border>
+
+        <!-- Кнопки действий -->
+        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button x:Name="ButtonSave"
+                    Content="Сохранить"
+                    Click="ButtonSave_Click"
+                    Width="100"
+                    Height="30"
+                    Margin="10,0" />
+            <Button x:Name="ButtonClean"
+                    Content="Очистить"
+                    Click="ButtonClean_Click"
+                    Width="100"
+                    Height="30"
+                    Margin="10,0" />
+        </StackPanel>
     </Grid>
 </Page>

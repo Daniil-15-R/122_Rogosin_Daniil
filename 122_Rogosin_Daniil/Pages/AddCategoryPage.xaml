@@ -8,14 +8,43 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AddCategoryPage">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <TextBlock Text="Название категории" Grid.Row="0" FontSize="20" Margin="55,91,319,71" RenderTransformOrigin="0.258,2.273"/>
-        <TextBox x:Name="TBCategoryName" Grid.Row="0" Margin="400,94,164,103" Text="{Binding Name}" />
-        <Button x:Name="ButtonSaveCategory" Content="Сохранить" Grid.Row="1" Click="ButtonSaveCategory_Click" Margin="249,89,249,101"/>
-        <Button x:Name="ButtonClean" Content="Очистить" Grid.Row="1" Click="ButtonClean_Click" Margin="249,148,249,42"/>
-    </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="Название категории" 
+                       Grid.Row="0" Grid.Column="0"
+                       FontSize="20" 
+                       Margin="10" 
+                       VerticalAlignment="Center"/>
+
+            <TextBox x:Name="TBCategoryName" 
+                     Grid.Row="0" Grid.Column="1"
+                     Margin="10" Height="30"
+                     Text="{Binding Name}" />
+
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Center"
+                        Margin="10">
+                <Button x:Name="ButtonSaveCategory" 
+                        Content="Сохранить" 
+                        Click="ButtonSaveCategory_Click" 
+                        Margin="5" Width="100"/>
+                <Button x:Name="ButtonClean" 
+                        Content="Очистить" 
+                        Click="ButtonClean_Click" 
+                        Margin="5" Width="100"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </Page>

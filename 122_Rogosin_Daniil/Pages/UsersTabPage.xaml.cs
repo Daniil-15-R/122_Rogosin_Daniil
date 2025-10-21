@@ -27,7 +27,14 @@ namespace _122_Rogosin_Daniil.Pages
             DataGridUser.ItemsSource = Entities.GetContext().User.ToList();
             this.IsVisibleChanged += Page_IsVisibleChanged;
         }
-
+        /// <summary>
+        /// Обрабатывает изменение видимости страницы для обновления данных
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события изменения видимости</param>
+        /// <remarks>
+        /// При повторном отображении страницы обновляет данные в DataGrid
+        /// </remarks>
         private void Page_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (Visibility == Visibility.Visible)
@@ -41,7 +48,15 @@ namespace _122_Rogosin_Daniil.Pages
         {
             NavigationService?.Navigate(new AddUserPage(null));
         }
-
+        /// <summary>
+        /// Обрабатывает нажатие кнопки удаления выбранных пользователей
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
+        /// <remarks>
+        /// Выполняет проверку выбора пользователей, подтверждение удаления и удаляет выбранных пользователей из базы данных
+        /// </remarks>
+        /// <exception cref="Exception">Может вызвать исключение при ошибке удаления из БД</exception>
         private void ButtonDel_Click(object sender, RoutedEventArgs e)
         {
             var usersForRemoving = DataGridUser.SelectedItems.Cast<User>().ToList();

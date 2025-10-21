@@ -31,7 +31,14 @@ namespace _122_Rogosin_Daniil.Pages
 
             DataContext = _currentCategory;
         }
-
+        /// <summary>
+        /// Обрабатывает событие нажатия кнопки сохранения категории
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
+        /// <remarks>
+        /// Выполняет валидацию данных и сохраняет категорию в базу данных
+        /// </remarks>
         private void ButtonSaveCategory_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder errors = new StringBuilder();
@@ -58,7 +65,11 @@ namespace _122_Rogosin_Daniil.Pages
                 MessageBox.Show(ex.Message.ToString());
             }
         }
-
+        /// <summary>
+        /// Обрабатывает событие нажатия кнопки очистки поля ввода
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
         private void ButtonClean_Click(object sender, RoutedEventArgs e)
         {
             TBCategoryName.Text = "";

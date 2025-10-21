@@ -24,7 +24,12 @@ namespace _122_Rogosin_Daniil.Pages
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Обработчик перехода на вкладку управления пользователями
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
+        /// 
         private void BtnTab1_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new UsersTabPage());

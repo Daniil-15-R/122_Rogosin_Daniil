@@ -33,7 +33,11 @@ namespace _122_Rogosin_Daniil.Pages
             sortComboBox.SelectedIndex = 0;
             onlyAdminCheckBox.IsChecked = false;
         }
-
+        /// <summary>
+        /// Обрабатывает изменение текста в поле фильтрации по ФИО
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события изменения текста</param>
         private void fioFilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdateUsers();
@@ -53,7 +57,20 @@ namespace _122_Rogosin_Daniil.Pages
         {
             UpdateUsers();
         }
-
+        /// <summary>
+        /// Обновляет список пользователей с применением фильтров и сортировки
+        /// </summary>
+        /// <remarks>
+        /// Выполняет фильтрацию по ФИО и роли, а также сортировку по выбранному критерию
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// // Пример применения фильтров:
+        /// // 1. Ввод текста в поле "ФИО" фильтрует пользователей по совпадению
+        /// // 2. Выбор "По убыванию" сортирует список в обратном порядке
+        /// // 3. Установка флажка "Только администраторы" показывает только пользователей с ролью "Admin"
+        /// </code>
+        /// </example>
         private void UpdateUsers()
         {
             if (!IsInitialized)

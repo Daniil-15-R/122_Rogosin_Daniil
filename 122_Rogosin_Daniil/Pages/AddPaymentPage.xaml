@@ -25,29 +25,29 @@
         <Button x:Name="ButtonClean" Content="Очистить" Grid.Row="2" Click="ButtonClean_Click" Margin="448,105,10,10"/>
 
         <TextBlock Grid.Row="1" FontSize="20" Margin="17,10,567,108">
-            <Run Language="ru-ru" Text="Количество"/>
+        <Run Language="ru-ru" Text="Количество"/>
         </TextBlock>
         <TextBox x:Name="TBCount" Grid.Row="1" Margin="400,10,48,109" Text="{Binding Num}" />
 
         <TextBlock Grid.Row="1" FontSize="20" Margin="27,62,618,57">
-            <Run Language="ru-ru" Text="Дата"/>
+        <Run Language="ru-ru" Text="Дата"/>
         </TextBlock>
         <TextBox x:Name="TBDate" Grid.Row="1" Margin="400,62,48,57" Text="{Binding Date}"/>
 
         <ComboBox x:Name="CBUser" Grid.Row="1" Margin="400,109,48,10" 
-                  SelectedValuePath="ID"
-                  SelectedValue="{Binding Path=UserID}" />
+              SelectedValuePath="ID"
+              SelectedValue="{Binding Path=UserID}" />
 
         <ComboBox x:Name="CBCategory" Grid.Row="2" Margin="400,10,48,109" 
-                  SelectedValuePath="ID"
-                  SelectedValue="{Binding Path=CategoryID}"/>
+              SelectedValuePath="ID"
+              SelectedValue="{Binding Path=CategoryID}"/>
 
         <TextBlock Grid.Row="1" FontSize="20" Margin="27,109,618,10">
-            <Run Text="ID"/><Run Language="ru-ru" Text=" клиента"/>
+        <Run Text="ID"/><Run Language="ru-ru" Text=" клиента"/>
         </TextBlock>
 
         <TextBlock Grid.Row="2" FontSize="20" Margin="24,10,622,109">
-            <Run Text="ID"/><Run Language="ru-ru" Text=" категории"/>
+        <Run Text="ID"/><Run Language="ru-ru" Text=" категории"/>
         </TextBlock>
     </Grid>
 </Page>

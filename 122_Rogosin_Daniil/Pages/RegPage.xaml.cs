@@ -27,7 +27,11 @@ namespace _122_Rogosin_Daniil.Pages
             InitializeComponent();
             comboBxRole.SelectedIndex = 0;
         }
-
+        /// <summary>
+        /// Вычисляет хеш-сумму пароля с использованием алгоритма SHA1
+        /// </summary>
+        /// <param name="password">Пароль для хеширования</param>
+        /// <returns>Хеш-сумма пароля в шестнадцатеричном формате</returns>
         public static string GetHash(String password)
         {
             using (var hash = SHA1.Create())
@@ -35,7 +39,23 @@ namespace _122_Rogosin_Daniil.Pages
                 return string.Concat(hash.ComputeHash(Encoding.UTF8.GetBytes(password)).Select(x => x.ToString("X2")));
             }
         }
-
+        /// <summary>
+        /// Обрабатывает нажатие кнопки регистрации пользователя
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
+        /// <remarks>
+        /// Выполняет валидацию данных, проверку уникальности логина и регистрирует нового пользователя
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// // Пример процесса регистрации:
+        /// // 1. Заполните все обязательные поля (ФИО, логин, пароль, подтверждение пароля)
+        /// // 2. Выберите роль пользователя
+        /// // 3. Нажмите кнопку "Зарегистрироваться"
+        /// // 4. Система проверит данные и создаст нового пользователя
+        /// </code>
+        /// </example>
         private void regButton_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(txtbxLog.Text) ||

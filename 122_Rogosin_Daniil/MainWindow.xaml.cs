@@ -11,6 +11,11 @@ namespace _122_Rogosin_Daniil
         {
             InitializeComponent();
         }
+        /// <summary>
+        /// Обработчик события загрузки окна - запускает таймер и открывает страницу авторизации
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -30,7 +35,11 @@ namespace _122_Rogosin_Daniil
                 MainFrame.GoBack();
             }
         }
-
+        /// <summary>
+        /// Обработчик переключения на светлую тему оформления
+        /// </summary>
+        /// <param name="sender">Источник события</param>
+        /// <param name="e">Данные события</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (MessageBox.Show("Вы уверены, что хотите закрыть окно?", "Подтверждение",
