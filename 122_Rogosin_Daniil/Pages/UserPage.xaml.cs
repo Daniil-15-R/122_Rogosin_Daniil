@@ -81,26 +81,23 @@ namespace _122_Rogosin_Daniil.Pages
             {
                 List<User> currentUsers = Entities.GetContext().User.ToList();
 
-                // Филтрация по фамилии
                 if (!string.IsNullOrWhiteSpace(fioFilterTextBox.Text))
                 {
                     currentUsers = currentUsers.Where(x => x.FIO.ToLower().Contains(fioFilterTextBox.Text.ToLower())).ToList();
                 }
 
-                // Фильтрация по роли
                 if (onlyAdminCheckBox.IsChecked.Value)
                 {
                     currentUsers = currentUsers.Where(x => x.Role == "Admin").ToList();
                 }
 
-                // Сортировка по убыванию/возрастанию
                 ListUser.ItemsSource = (sortComboBox.SelectedIndex == 0) ?
                     currentUsers.OrderBy(x => x.FIO).ToList() :
                     currentUsers.OrderByDescending(x => x.FIO).ToList();
             }
             catch (Exception)
             {
-                // Обработка ошибок
+
             }
         }
     }

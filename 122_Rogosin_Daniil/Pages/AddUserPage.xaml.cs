@@ -62,7 +62,6 @@ namespace _122_Rogosin_Daniil.Pages
                 return;
             }
 
-            // Обработка фотографии
             if (!string.IsNullOrWhiteSpace(_selectedPhotoPath))
             {
                 try
@@ -74,13 +73,12 @@ namespace _122_Rogosin_Daniil.Pages
                     string fileName = System.IO.Path.GetFileName(_selectedPhotoPath);
                     string destinationPath = System.IO.Path.Combine(photosDirectory, fileName);
 
-                    // Копируем файл в папку приложения, если он еще не там
                     if (!File.Exists(destinationPath) || !_selectedPhotoPath.Equals(destinationPath, StringComparison.OrdinalIgnoreCase))
                     {
                         File.Copy(_selectedPhotoPath, destinationPath, true);
                     }
 
-                    _currentUser.Photo = fileName; // Сохраняем только имя файла
+                    _currentUser.Photo = $"UserPhotos/{fileName}";
                 }
                 catch (Exception ex)
                 {
